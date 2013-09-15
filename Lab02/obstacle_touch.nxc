@@ -1,0 +1,82 @@
+task main()
+{
+  SetSensorTouch(IN_1);
+  SetSensorTouch(IN_4);
+  bool big_turn = false;
+  
+  while (true)
+  {
+    // Going forward until sensor pressed
+    OnFwd(OUT_AC, 50);
+    
+    // If left touch sensor pressed
+    if (SENSOR_4 == 1)
+    {
+      Off(OUT_AC);
+      Wait(500);
+      
+      // If both sensors pressed
+      if (SENSOR_1 == 1)
+      {
+        big_turn = true;
+      }
+
+      // Reverse for half a second
+      OnRev(OUT_AC, 50);
+      Wait(500);
+      Off(OUT_A);
+
+      // Turn right
+      if (big_turn)
+      {
+        // For a second
+        OnFwd(OUT_C, 50);
+        Wait(1000);
+      }
+      
+      else
+      {
+        // For half a second
+        OnFwd(OUT_C, 50);
+        Wait(500);
+      }
+      
+      big_turn = false;
+    }
+    
+    // If right touch sensor pressed
+    if (SENSOR_1 == 1)
+    {
+      Off(OUT_AC);
+      Wait(500);
+      
+      // If both sensors pressed
+      if (SENSOR_4 == 1)
+      {
+        big_turn = true;
+      }
+      
+      // Reverse for half a second
+      OnRev(OUT_AC, 50);
+      Wait(500);
+      Off(OUT_C);
+      
+      // Turn left
+      if (big_turn)
+      {
+        // For a second
+        OnFwd(OUT_A, 50);
+        Wait(1000);
+      }
+      
+      else
+      {
+        // For half a second
+        OnFwd(OUT_A, 50);
+        Wait(500);
+      }
+      
+      big_turn = false;
+    }
+  }
+}

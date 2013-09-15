@@ -1,0 +1,101 @@
+mutex control;
+const int LEFT = 0;
+const int RIGHT = 1;
+const int BOTH = 2;
+
+sub avoid(int pressed)
+{
+  // Reverse for half a second
+  OnRev(OUT_AC, 50);
+  Wait(500);
+  
+  switch (pressed)
+  {
+    // Left sensor pushed, turn right
+    case LEFT:
+      Off(OUT_A);
+      OnFwd(OUT_C, 50);
+      Wait(500);
+      break;
+
+    // Right sensor pushed, turn left
+    case RIGHT:
+      Off(OUT_C);
+      OnFwd(OUT_A, 50);
+      Wait(500);
+      break;
+
+    // Both sensors pushed, turn left longer
+    case BOTH:
+      Off(OUT_C);
+      OnFwd(OUT_A, 50);
+      Wait(1000);
+      break;
+    
+    default:
+  }
+}
+
+task check_sensors()
+{
+  while (true)
+  {
+    Acquire(control);
+    
+    // If left sensor pressed
+    if (SENSOR_4 == 1)
+    {
+      Off(OUT_AC);
+      Wait(500);
+      
+      // If both sensors pressed
+      if (SENSOR_1 == 1)
+      {
+        avoid(BOTH);
+      }
+      
+      else
+      {
+        avoid(LEFT);
+      }
+    }
+    
+    // If right sensor pressed
+    if (SENSOR_1 == 1)
+    {
+      Off(OUT_AC);
+      Wait(500);
+      
+      // If both sensors pushed
+      if (SENSOR_4 == 1)
+      {
+        avoid(BOTH);
+      }
+      
+      else
+      {
+        avoid(RIGHT);
+      }
+    }
+    
+    Release(control);
+  }
+}
+
+// Move forward at 50% power
+task move_forward()
+{
+  while (true)
+  {
+    Acquire(control);
+    OnFwd(OUT_AC, 50);
+    Release(control);
+  }
+}
+
+task main()
+{
+  Precedes(check_sensors, move_forward);
+  SetSensorTouch(IN_1);
+  SetSensorTouch(IN_4);
+}

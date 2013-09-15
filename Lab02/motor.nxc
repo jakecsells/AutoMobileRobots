@@ -1,0 +1,29 @@
+task main()
+{
+  // Motor 1 Fwd @ 50% for 3 seconds
+  OnFwd(OUT_A,50);
+  Wait(3000);
+  
+  // Beeper
+  PlayTone(500,1000);
+  
+  // Motor 1 Rev @ 50% for 2 seconds
+  OnRev(OUT_A,50);
+  Wait(2000);
+  
+  // Beeper
+  PlayTone(500,1000);
+  
+  // Motor 1 Off for 2 seconds
+  Off(OUT_A);
+  Wait(2000);
+  
+  // Motor 1 Fwd @ 100% for 3 seconds
+  OnFwd(OUT_A,100);
+  Wait(3000);
+  
+  // Beeper and Motor 1 Off
+  PlayTone(500,1000);
+  Off(OUT_A);
+  Wait(1000);
+}

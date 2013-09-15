@@ -1,0 +1,39 @@
+task main()
+{
+  bool flag = true;
+  SetSensorTouch(IN_1);
+  ClearScreen();
+
+  while (true)
+  {
+    // If sensor pressed
+    if (SENSOR_1 == 1)
+    {
+      // If idle
+      if (flag)
+      {
+        // Display "BUMPED ON!"
+        ClearScreen();
+        TextOut(0,LCD_LINE4,"BUMPED ON!");
+        
+        // Start spinning
+        OnFwd(OUT_A, 50);
+        Wait(500);
+        flag = false;
+      }
+
+      // Else it's already spinning
+      else
+      {
+        // Display "BUMPED OFF!"
+        ClearScreen();
+        TextOut(0,LCD_LINE4,"BUMPED OFF!");
+        
+        // Stop spinning
+        Off(OUT_A);
+        Wait(500);
+        flag = true;
+      }
+    }
+  }
+}

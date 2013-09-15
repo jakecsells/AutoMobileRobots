@@ -1,0 +1,285 @@
+#SYMBOLS
+Index	Identifier	Type	Flag	Data	Size	RefCount
+0	__DU0main	5	1	0	4	4
+1	__signed_stack_001main	6	1	4	4	8
+2	__D0main	6	1	8	4	24
+3	__Wait_7qG2_ms_7qG2_000_inline_main	5	1	12	4	16
+4	__zfmain	1	1	16	1	18
+5	__PFTmp	1	1	17	1	1
+6	__constVal96	2	0	18	1	11
+7	__constVal63	2	0	19	1	11
+8	__main_7qG2_big_turn_7qG2_000	1	1	20	1	7
+9	____initialize_global_data_return	1	1	21	1	3
+10	__SetSensorTouch_7qG2_port_7qG2_000_inline_main	1	1	22	1	8
+11	__constVal0	2	1	23	1	42
+12	__constVal50	2	0	24	1	2
+13	__constVal1	2	0	25	1	3
+14	__OnRev_Tmp	2	1	26	1	4
+15	__constVal32	2	0	27	1	35
+16	____ResetSensorSubroutine_return	1	1	28	1	4
+17	__constVal2	2	0	29	1	3
+18	__ResetSensorTmp	1	1	30	1	2
+19	__constVal3	2	0	31	1	13
+20	__ResetSensorPort	1	1	32	1	4
+21	__OUT_AC	7	0	34	4	5
+22	__OUT_AC.__OUT_AC_type	1	0	0	1	0
+#SOURCES
+Clump	Line	PC	Source
+0	2	0	#line 2 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	3	0		subcall __initialize_global_data, ____initialize_global_data_return
+0	2	2	#line 2 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	2	2	#line 2 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	3	2		set __SetSensorTouch_7qG2_port_7qG2_000_inline_main, 0
+0	2	5	#line 2 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	3718	5	#line 3718 "NXCDefs.h"
+0	3719	5	#pragma macro 6
+0	3719	5		setin __constVal1, __SetSensorTouch_7qG2_port_7qG2_000_inline_main, 0
+0	3719	9		setin __constVal32, __SetSensorTouch_7qG2_port_7qG2_000_inline_main, 1
+0	3719	13		mov __ResetSensorPort, __SetSensorTouch_7qG2_port_7qG2_000_inline_main
+0	3719	15		subcall __ResetSensorSubroutine, ____ResetSensorSubroutine_return
+0	3575	17	#line 3575 "NXCDefs.h"
+0	3718	17	#line 3718 "NXCDefs.h"
+0	3	17	#line 3 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	3	17	#line 3 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	4	17		set __SetSensorTouch_7qG2_port_7qG2_000_inline_main, 3
+0	3	20	#line 3 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	3718	20	#line 3718 "NXCDefs.h"
+0	3719	20	#pragma macro 6
+0	3719	20		setin __constVal1, __SetSensorTouch_7qG2_port_7qG2_000_inline_main, 0
+0	3719	24		setin __constVal32, __SetSensorTouch_7qG2_port_7qG2_000_inline_main, 1
+0	3719	28		mov __ResetSensorPort, __SetSensorTouch_7qG2_port_7qG2_000_inline_main
+0	3719	30		subcall __ResetSensorSubroutine, ____ResetSensorSubroutine_return
+0	3585	32	#line 3585 "NXCDefs.h"
+0	3718	32	#line 3718 "NXCDefs.h"
+0	4	32	#line 4 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	6	32	#line 6 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	7	32		set __main_7qG2_big_turn_7qG2_000, 0
+0	6	35	#line 6 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	7	35	#line 7 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	8	35		set __D0main, 1
+0	8	38	#line 8 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	9	38		tst 5, __zfmain, __D0main
+0	8	41	#line 8 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	9	41		brtst 4, __NXC_Label_496, __zfmain
+0	8	44	#line 8 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	9	44		set __D0main, 50
+0	10	47	#line 10 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	11	47	#pragma macro 7
+0	11	47		setout __OUT_AC, 2, __D0main, 1, __constVal3, 8, __constVal0, 6, __constVal32, 7, __constVal0, 5, __constVal0, 10, __constVal96, 11, __constVal32, 12, __constVal32, 0, __constVal63
+0	3612	70	#line 3612 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	10	70	#line 10 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	10	70	#line 10 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	11	70		getin __signed_stack_001main, __constVal3, 4
+0	10	74	#line 10 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	11	74	#line 11 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	12	74		set __D0main, 1
+0	11	77	#line 11 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	12	77		cmp 4, __zfmain, __signed_stack_001main, __D0main
+0	11	81	#line 11 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	12	81		mov __D0main, __zfmain
+0	12	83	#line 12 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	13	83		brtst 4, __NXC_Label_503, __zfmain
+0	13	86	#line 13 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	14	86	#pragma macro 7
+0	14	86		setout __OUT_AC, 2, __constVal0, 1, __constVal3, 8, __constVal0, 6, __constVal32, 7, __constVal0, 5, __constVal0, 10, __constVal96, 11, __constVal32, 12, __constVal32, 0, __constVal63
+0	3629	109	#line 3629 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	13	109	#line 13 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	13	109	#line 13 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	14	109		set __Wait_7qG2_ms_7qG2_000_inline_main, 500
+0	13	112	#line 13 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	7921	112	#line 7921 "NXCDefs.h"
+0	7922	112		wait2 NA, __Wait_7qG2_ms_7qG2_000_inline_main
+0	7921	115	#line 7921 "NXCDefs.h"
+0	15	115	#line 15 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	15	115	#line 15 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	16	115		getin __signed_stack_001main, __constVal0, 4
+0	15	119	#line 15 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	16	119	#line 16 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	17	119		set __D0main, 1
+0	16	122	#line 16 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	17	122		cmp 4, __zfmain, __signed_stack_001main, __D0main
+0	16	126	#line 16 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	17	126		mov __D0main, __zfmain
+0	17	128	#line 17 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	18	128		brtst 4, __NXC_Label_508, __zfmain
+0	18	131	#line 18 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	19	131		set __main_7qG2_big_turn_7qG2_000, 1
+0	18	134	#line 18 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	18	134	#line 18 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	20	134	#line 20 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	20	134	#line 20 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	21	134	#line 21 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	22	134	#pragma macro 10
+0	22	134		neg __OnRev_Tmp, __constVal50
+0	22	137		setout __OUT_AC, 2, __OnRev_Tmp, 1, __constVal3, 8, __constVal0, 6, __constVal32, 7, __constVal0, 5, __constVal0, 10, __constVal96, 11, __constVal32, 12, __constVal32, 0, __constVal63
+0	3673	160	#line 3673 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	21	160	#line 21 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	21	160	#line 21 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	22	160		set __Wait_7qG2_ms_7qG2_000_inline_main, 500
+0	21	163	#line 21 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	7921	163	#line 7921 "NXCDefs.h"
+0	7922	163		wait2 NA, __Wait_7qG2_ms_7qG2_000_inline_main
+0	7921	166	#line 7921 "NXCDefs.h"
+0	22	166	#line 22 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	24	166	#line 24 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	25	166	#pragma macro 7
+0	25	166		setout __constVal0, 2, __constVal0, 1, __constVal3, 8, __constVal0, 6, __constVal32, 7, __constVal0, 5, __constVal0, 10, __constVal96, 11, __constVal32, 12, __constVal32, 0, __constVal63
+0	3686	189	#line 3686 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	24	189	#line 24 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	25	189	#line 25 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	26	189		mov __DU0main, __main_7qG2_big_turn_7qG2_000
+0	26	191	#line 26 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	27	191		tst 5, __zfmain, __DU0main
+0	26	194	#line 26 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	27	194		brtst 4, __NXC_Label_517, __zfmain
+0	26	197	#line 26 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	27	197		set __D0main, 50
+0	27	200	#line 27 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	28	200	#pragma macro 7
+0	28	200		setout __constVal2, 2, __D0main, 1, __constVal3, 8, __constVal0, 6, __constVal32, 7, __constVal0, 5, __constVal0, 10, __constVal96, 11, __constVal32, 12, __constVal32, 0, __constVal63
+0	3701	223	#line 3701 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	27	223	#line 27 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	27	223	#line 27 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	28	223		set __Wait_7qG2_ms_7qG2_000_inline_main, 1000
+0	27	226	#line 27 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	7921	226	#line 7921 "NXCDefs.h"
+0	7922	226		wait2 NA, __Wait_7qG2_ms_7qG2_000_inline_main
+0	7921	229	#line 7921 "NXCDefs.h"
+0	28	229	#line 28 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	32	229	#line 32 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	33	229		jmp __NXC_Label_522
+0	32	231	#line 32 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	33	231		set __D0main, 50
+0	33	234	#line 33 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	34	234	#pragma macro 7
+0	34	234		setout __constVal2, 2, __D0main, 1, __constVal3, 8, __constVal0, 6, __constVal32, 7, __constVal0, 5, __constVal0, 10, __constVal96, 11, __constVal32, 12, __constVal32, 0, __constVal63
+0	3721	257	#line 3721 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	33	257	#line 33 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	33	257	#line 33 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	34	257		set __Wait_7qG2_ms_7qG2_000_inline_main, 500
+0	33	260	#line 33 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	7921	260	#line 7921 "NXCDefs.h"
+0	7922	260		wait2 NA, __Wait_7qG2_ms_7qG2_000_inline_main
+0	7921	263	#line 7921 "NXCDefs.h"
+0	34	263	#line 34 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	36	263	#line 36 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	37	263	#line 37 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	38	263		set __main_7qG2_big_turn_7qG2_000, 0
+0	37	266	#line 37 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	37	266	#line 37 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	39	266	#line 39 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	39	266	#line 39 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	40	266		getin __signed_stack_001main, __constVal0, 4
+0	39	270	#line 39 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	40	270	#line 40 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	41	270		set __D0main, 1
+0	40	273	#line 40 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	41	273		cmp 4, __zfmain, __signed_stack_001main, __D0main
+0	40	277	#line 40 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	41	277		mov __D0main, __zfmain
+0	41	279	#line 41 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	42	279		brtst 4, __NXC_Label_531, __zfmain
+0	42	282	#line 42 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	43	282	#pragma macro 7
+0	43	282		setout __OUT_AC, 2, __constVal0, 1, __constVal3, 8, __constVal0, 6, __constVal32, 7, __constVal0, 5, __constVal0, 10, __constVal96, 11, __constVal32, 12, __constVal32, 0, __constVal63
+0	3759	305	#line 3759 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	42	305	#line 42 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	42	305	#line 42 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	43	305		set __Wait_7qG2_ms_7qG2_000_inline_main, 500
+0	42	308	#line 42 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	7921	308	#line 7921 "NXCDefs.h"
+0	7922	308		wait2 NA, __Wait_7qG2_ms_7qG2_000_inline_main
+0	7921	311	#line 7921 "NXCDefs.h"
+0	44	311	#line 44 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	44	311	#line 44 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	45	311		getin __signed_stack_001main, __constVal3, 4
+0	44	315	#line 44 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	45	315	#line 45 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	46	315		set __D0main, 1
+0	45	318	#line 45 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	46	318		cmp 4, __zfmain, __signed_stack_001main, __D0main
+0	45	322	#line 45 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	46	322		mov __D0main, __zfmain
+0	46	324	#line 46 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	47	324		brtst 4, __NXC_Label_536, __zfmain
+0	47	327	#line 47 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	48	327		set __main_7qG2_big_turn_7qG2_000, 1
+0	47	330	#line 47 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	47	330	#line 47 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	49	330	#line 49 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	49	330	#line 49 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	50	330	#line 50 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	51	330	#pragma macro 10
+0	51	330		neg __OnRev_Tmp, __constVal50
+0	51	333		setout __OUT_AC, 2, __OnRev_Tmp, 1, __constVal3, 8, __constVal0, 6, __constVal32, 7, __constVal0, 5, __constVal0, 10, __constVal96, 11, __constVal32, 12, __constVal32, 0, __constVal63
+0	3799	356	#line 3799 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	50	356	#line 50 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	50	356	#line 50 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	51	356		set __Wait_7qG2_ms_7qG2_000_inline_main, 500
+0	50	359	#line 50 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	7921	359	#line 7921 "NXCDefs.h"
+0	7922	359		wait2 NA, __Wait_7qG2_ms_7qG2_000_inline_main
+0	7921	362	#line 7921 "NXCDefs.h"
+0	51	362	#line 51 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	53	362	#line 53 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	54	362	#pragma macro 7
+0	54	362		setout __constVal2, 2, __constVal0, 1, __constVal3, 8, __constVal0, 6, __constVal32, 7, __constVal0, 5, __constVal0, 10, __constVal96, 11, __constVal32, 12, __constVal32, 0, __constVal63
+0	3812	385	#line 3812 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	53	385	#line 53 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	54	385	#line 54 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	55	385		mov __DU0main, __main_7qG2_big_turn_7qG2_000
+0	55	387	#line 55 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	56	387		tst 5, __zfmain, __DU0main
+0	55	390	#line 55 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	56	390		brtst 4, __NXC_Label_545, __zfmain
+0	55	393	#line 55 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	56	393		set __D0main, 50
+0	56	396	#line 56 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	57	396	#pragma macro 7
+0	57	396		setout __constVal0, 2, __D0main, 1, __constVal3, 8, __constVal0, 6, __constVal32, 7, __constVal0, 5, __constVal0, 10, __constVal96, 11, __constVal32, 12, __constVal32, 0, __constVal63
+0	3827	419	#line 3827 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	56	419	#line 56 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	56	419	#line 56 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	57	419		set __Wait_7qG2_ms_7qG2_000_inline_main, 1000
+0	56	422	#line 56 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	7921	422	#line 7921 "NXCDefs.h"
+0	7922	422		wait2 NA, __Wait_7qG2_ms_7qG2_000_inline_main
+0	7921	425	#line 7921 "NXCDefs.h"
+0	57	425	#line 57 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	61	425	#line 61 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	62	425		jmp __NXC_Label_550
+0	61	427	#line 61 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	62	427		set __D0main, 50
+0	62	430	#line 62 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	63	430	#pragma macro 7
+0	63	430		setout __constVal0, 2, __D0main, 1, __constVal3, 8, __constVal0, 6, __constVal32, 7, __constVal0, 5, __constVal0, 10, __constVal96, 11, __constVal32, 12, __constVal32, 0, __constVal63
+0	3847	453	#line 3847 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	62	453	#line 62 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	62	453	#line 62 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	63	453		set __Wait_7qG2_ms_7qG2_000_inline_main, 500
+0	62	456	#line 62 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	7921	456	#line 7921 "NXCDefs.h"
+0	7922	456		wait2 NA, __Wait_7qG2_ms_7qG2_000_inline_main
+0	7921	459	#line 7921 "NXCDefs.h"
+0	63	459	#line 63 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	65	459	#line 65 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	66	459	#line 66 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	67	459		set __main_7qG2_big_turn_7qG2_000, 0
+0	66	462	#line 66 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	66	462	#line 66 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	68	462	#line 68 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	70	462	#line 70 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	71	462		jmp __NXC_Label_495
+0	70	464	#line 70 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+0	71	464		exit -1, -1
+1	4885	0		setin __constVal1, __ResetSensorPort, 5
+1	4887	4		getin __ResetSensorTmp, __ResetSensorPort, 5
+1	4888	8		brtst 5, __SensorStillInvalid, __ResetSensorTmp
+1	4889	11		subret ____ResetSensorSubroutine_return
+2	71	0	#line 71 "C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc"
+2	72	0		subret ____initialize_global_data_return
+#CLUMPS
+Clump	Name	Offset	File
+0	main	0	C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc
+1	__ResetSensorSubroutine	467	NXTDefs.h
+2	__initialize_global_data	480	C:\Users\desktop\Desktop\Lab 2\obstacle_touch.nxc

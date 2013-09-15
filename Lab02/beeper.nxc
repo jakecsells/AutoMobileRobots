@@ -1,0 +1,14 @@
+task main()
+{
+  // 3 seconds @ 500 Hz + 1 second silent
+  PlayTone(500,3000);
+  Wait(4000);
+  
+  // 3 seconds @ 100 Hz + 1 second silent
+  PlayTone(100,3000);
+  Wait(4000);
+  
+  // 2 seconds @ 1000 Hz
+  PlayTone(1000,2000);
+  Wait(2000);
+}
