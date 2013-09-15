@@ -1,59 +1,98 @@
 <!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <title>Auto Mobile Robots by jakecsells</title>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Auto Mobile Robots : Bradley Pearson &amp; Jake Sells" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Auto Mobile Robots</title>
   </head>
 
   <body>
-    <div id="container">
-      <div class="inner">
 
-        <header>
-          <h1>Auto Mobile Robots</h1>
-          <h2>Bradley Pearson &amp; Jake Sells</h2>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/jakecsells/AutoMobileRobots">View on GitHub</a>
+
+          <h1 id="project_title">Auto Mobile Robots</h1>
+          <h2 id="project_tagline">Bradley Pearson &amp; Jake Sells</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/jakecsells/AutoMobileRobots/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/jakecsells/AutoMobileRobots/tarball/master">Download this project as a tar.gz file</a>
+            </section>
         </header>
+    </div>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/jakecsells/AutoMobileRobots/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/jakecsells/AutoMobileRobots/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/jakecsells/AutoMobileRobots" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
-
-        <hr>
-
-        <section id="main_content">
-          <h3>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>
 <a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h3>
 
-<hr><p>Here is the overview of the class</p>
+<hr><p>Website for the submission and hosting of code for <a href="http://www.cse.unr.edu/%7Emonica/Courses/CPE470-670/index.html">CPE 470: Autonomous Mobile Robots</a> with <a href="http://www.cse.unr.edu/%7Emonica/">Monica Nicolescu</a>. We are using <a href="http://bricxcc.sourceforge.net/">BricxCC</a> to design, build, and run the programs for the NXT Mindstorm Lego Kit.</p>
 
 <h3>
 <a name="lab-2" class="anchor" href="#lab-2"><span class="octicon octicon-link"></span></a>Lab 2</h3>
 
-<hr><p>Here is lab 2</p>
+<hr><p>We successfully completed lab 2 by finishing each mini-program for the lab.</p>
+
+<p>The entire lab can be downloaded from our gibhub page or through the links above. The solution to lab 2 is within the folder "Lab02".</p>
+
+<p>The most complex of the programs written is the multi-tasking program. This program required a mutex to control which function has control of the robot at a certain time.</p>
+
+<p>For example:</p>
+
+<div class="highlight highlight-c++"><pre><span class="n">mutex</span> <span class="n">control</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="n">task</span> <span class="n">check_sensors</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">Acquire</span><span class="p">(</span><span class="n">control</span><span class="p">);</span>
+
+    <span class="c1">// If left sensor pressed</span>
+<span class="p">...</span>
+    <span class="n">Release</span><span class="p">(</span><span class="n">control</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="p">...</span>
+<span class="c1">// Move forward at 50% power</span>
+<span class="n">task</span> <span class="n">move_forward</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">Acquire</span><span class="p">(</span><span class="n">control</span><span class="p">);</span>
+    <span class="n">OnFwd</span><span class="p">(</span><span class="n">OUT_AC</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+    <span class="n">Release</span><span class="p">(</span><span class="n">control</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
 <h3>
 <a name="lab-1" class="anchor" href="#lab-1"><span class="octicon octicon-link"></span></a>Lab 1</h3>
 
-<hr><p>Here is lab 1</p>
-        </section>
+<hr><p>For lab one, we built the generic NXT Mindstorm Lego Robot with the kit.</p>
 
-        <footer>
-          Auto Mobile Robots is maintained by <a href="https://github.com/jakecsells">jakecsells</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
+<p><img src="https://raw.github.com/jakecsells/AutoMobileRobots/master/website_assets/mindstorm_nxt_design.jpg" alt="Lego NXT Robot"></p>
 
-        
-      </div>
+<p>Pictured is not a picture of our robot, but a picture of the design that we used.</p>
+      </section>
     </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Auto Mobile Robots maintained by <a href="https://github.com/jakecsells">jakecsells</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
   </body>
 </html>
