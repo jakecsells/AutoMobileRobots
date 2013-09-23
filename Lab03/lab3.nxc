@@ -1,0 +1,105 @@
+#include "RFIDlib.nxc"
+
+mutex control;
+bool flag = true;
+const int LEFT = 0;
+const int RIGHT = 1;
+const int BOTH = 2;
+const int NEAR = 20; //cm
+const int TURN_TIME = 200; //ms
+
+// Turns the robot completely around, 180 degrees
+sub do_180()
+{
+  Off(OUT_AC);
+  Wait(250);
+  OnRev(OUT_A, 100);
+  OnFwd(OUT_C, 100);
+  Wait(300);
+}
+
+sub avoid(int pressed)
+{
+  // Stop motors briefly
+  Off(OUT_AC);
+  Wait(250);
+
+  switch (pressed)
+  {
+    // Left sensor triggered, reverse
+    case LEFT:
+      OnRev(OUT_A, 100);
+      Wait(TURN_TIME);
+      break;
+
+    // Right sensor triggered, reverse
+    case RIGHT:
+      OnRev(OUT_C, 100);
+      Wait(TURN_TIME);
+      break;
+  }
+}
+
+task check_sonar()
+{
+  while (true)
+  {
+    Acquire(control);
+    
+    // Right sensor triggered
+    if (SensorUS(IN_1) <= NEAR)
+    {
+      avoid(RIGHT);
+    }
+    
+    // Left sensor triggered
+    if (SensorUS(IN_4) <= NEAR)
+    {
+       avoid(LEFT);
+    }
+    
+    Release(control);
+  }
+}
+
+task check_RF()
+{
+  byte arr[5];
+  
+  // Keep checking RF sensor until RF card is found
+  while (flag)
+  {
+    Acquire(control);
+    GetRFIDArray(IN_2,arr,true);
+    
+    // If RF card found, play sound and turn robot around
+    if (arr[0] != 0 || arr[1] != 0 || arr[2] != 0 || arr[3] != 0 || arr[4] != 0)
+    {
+      PlayTone(500, 1000);
+      do_180();
+      flag = false;
+    }
+  
+    Release(control);
+  }
+}
+
+task move_forward()
+{
+  while (true)
+  {
+    Acquire(control);
+    OnFwd(OUT_AC, 100);
+    Release(control);
+  }
+}
+
+task main()
+{
+  Precedes(check_RF, check_sonar, move_forward);
+  SetSensorLowspeed(IN_1);
+  SetSensorLowspeed(IN_4);
+  
+  SetSensorLowspeed(IN_2);
+  RFIDDummy(IN_2);
+}
