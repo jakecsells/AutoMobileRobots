@@ -1,0 +1,269 @@
+#include "RFIDlib.nxc"
+
+// Constants for input sensors
+const byte IN_COLOR = IN_2;
+const byte IN_RF = IN_3;
+const byte IN_US_LEFT = IN_4;
+const byte IN_US_RIGHT = IN_1;
+
+// Constants for output motors
+const byte OUT_LEFT = OUT_C;
+const byte OUT_RIGHT = OUT_A;
+
+// Constants for playing a tone
+const int TONE_FREQ = 1000; // Hz
+const int TONE_TIME = 500; // ms
+
+// Constants for colored paper detection
+const int COLOR_BLACK = 0;
+const int COLOR_GREEN = 4;
+const int COLOR_YELLOW = 5;
+const int COLOR_ORANGE = 7;
+const int COLOR_RED = 9;
+const int COLOR_PINK = 10;
+
+// Constants for machine state
+const int STATE_HARVEST = 0;
+const int STATE_HOMEBOUND = 1;
+const int STATE_COMPLETE = 2;
+
+// Constants for wall avoidance
+const int LEFT = 0;
+const int RIGHT = 1;
+const int HUG_LEFT = 2;
+const int HUG_RIGHT = 3;
+
+// Misc. constants
+const int NEAR = 15;
+const int TIME_HARVEST = 60; // sec
+const int SPEED = 75;
+
+// Global variables
+mutex control;
+int food_color;
+int food_rf;
+int state;
+int time_start;
+int time_remaining;
+int time_found;
+
+sub avoid(int param)
+{
+  switch (param)
+  {
+    // If left sensor triggered while harvesting
+    case LEFT:
+      Off(OUT_LEFT);
+      OnRev(OUT_RIGHT, SPEED);
+      Wait(Random(250) + 250);
+      break;
+
+    // If right sensor triggered while harvesting
+    case RIGHT:
+      Off(OUT_RIGHT);
+      OnRev(OUT_LEFT, SPEED);
+      Wait(Random(250) + 250);
+      break;
+
+    // If right sensor triggered while homebound
+    case HUG_RIGHT:
+      Off(OUT_RIGHT);
+      OnRev(OUT_LEFT, SPEED);
+      Wait(100);
+      break;
+
+    // If left sensor triggered while homebound
+    case HUG_LEFT:
+      Off(OUT_LEFT);
+      OnRev(OUT_RIGHT, SPEED);
+      Wait(100);
+      break;
+  }
+}
+
+sub update_screen()
+{
+  string output;
+
+  ClearScreen();
+
+  if (state == STATE_HARVEST)
+  {
+    output = "HARVESTING";
+  }
+
+  else if (state == STATE_HOMEBOUND)
+  {
+    output = "HOMEBOUND";
+  }
+
+  else
+  {
+    output = "COMPLETE";
+  }
+
+  TextOut(1, LCD_LINE1, output);
+  TextOut(1, LCD_LINE2, "Countdown: ");
+  NumOut(70, LCD_LINE2, time_remaining);
+  TextOut(1, LCD_LINE4, "Color food: ");
+  NumOut(70, LCD_LINE4, food_color);
+  TextOut(1, LCD_LINE5, "RF food: ");
+  NumOut(70, LCD_LINE5, food_rf);
+}
+
+task move()
+{
+  while (state == STATE_HARVEST)
+  {
+    Acquire(control);
+    OnFwd(OUT_LEFT, (Random(25) + 75));
+    OnFwd(OUT_RIGHT, (Random(25) + 75));
+
+    if (SensorUS(IN_US_RIGHT) < NEAR)
+    {
+      avoid(RIGHT);
+    }
+    
+    if (SensorUS(IN_US_LEFT) < NEAR)
+    {
+      avoid(LEFT);
+    }
+
+    Release(control);
+  }
+  
+  while (state == STATE_HOMEBOUND)
+  {
+    Acquire(control);
+    OnFwd(OUT_LEFT, SPEED);
+    OnFwd(OUT_RIGHT, SPEED);
+    
+    if (SensorUS(IN_US_RIGHT) < NEAR)
+    {
+      avoid(HUG_RIGHT);
+    }
+    
+    if (SensorUS(IN_US_LEFT) < NEAR)
+    {
+      avoid(HUG_LEFT);
+    }
+    
+    Release(control);
+  }
+  
+  Acquire(control);
+  Off(OUT_LEFT);
+  Off(OUT_RIGHT);
+  PlayTone(TONE_FREQ, TONE_TIME);
+  Wait(TONE_TIME * 2);
+  PlayTone(TONE_FREQ, TONE_TIME);
+  Wait(TONE_TIME * 2);
+  PlayTone(TONE_FREQ, TONE_TIME);
+  Release(control);
+  
+  while (state == STATE_COMPLETE){}
+}
+
+task check_color()
+{
+  int color;
+  
+  while (state == STATE_HARVEST)
+  {
+    Acquire(control);
+    color = SensorHTColorNum(IN_COLOR);
+    
+    if (color == COLOR_GREEN || color == COLOR_YELLOW || color == COLOR_ORANGE
+        || color == COLOR_RED || color == COLOR_PINK)
+    {
+      if ((CurrentTick() / 1000) - time_found >= 1)
+      {
+        time_found = CurrentTick() / 1000;
+        PlayTone(TONE_FREQ, TONE_TIME);
+        food_color++;
+        update_screen();
+      }
+    }
+
+    Release(control);
+  }
+  
+  while (state == STATE_HOMEBOUND)
+  {
+    Acquire(control);
+    color = SensorHTColorNum(IN_COLOR);
+    
+    if (color == COLOR_BLACK)
+    {
+      state = STATE_COMPLETE;
+      update_screen();
+    }
+    
+    Release(control);
+  }
+}
+
+task check_rf()
+{
+  byte arr[5];
+  
+  while (state == STATE_HARVEST)
+  {
+    Acquire(control);
+    GetRFIDArray(IN_RF, arr, true);
+    
+    if (arr[0] != 0 || arr[1] != 0 || arr[2] != 0 || arr[3] != 0 || arr[4] != 0)
+    {
+      if ((CurrentTick() / 1000) - time_found >= 1)
+      {
+        time_found = CurrentTick() / 1000;
+        PlayTone(TONE_FREQ, TONE_TIME);
+        food_rf++;
+        update_screen();
+      }
+    }
+    
+    Release(control);
+  }
+}
+
+task check_timer()
+{
+  // Update countdown timer constantly while time remains
+  while (time_remaining > 0)
+  {
+    Acquire(control);
+    time_remaining = TIME_HARVEST - ((CurrentTick() / 1000) - time_start);
+    update_screen();
+    Release(control);
+  }
+  
+  // Play a couple tones to signal that the robot is done harvesting
+  Acquire(control);
+  PlayTone(TONE_FREQ, TONE_TIME);
+  Wait(TONE_TIME * 2);
+  PlayTone(TONE_FREQ, TONE_TIME);
+  state = STATE_HOMEBOUND;
+  update_screen();
+  Release(control);
+}
+
+task main()
+{
+  // Initialize variables
+  time_start = CurrentTick() / 1000;
+  time_found = time_start;
+  time_remaining = TIME_HARVEST;
+  food_color = 0;
+  food_rf = 0;
+  state = STATE_HARVEST;
+  SetSensorLowspeed(IN_COLOR);
+  SetSensorLowspeed(IN_RF);
+  SetSensorLowspeed(IN_US_LEFT);
+  SetSensorLowspeed(IN_US_RIGHT);
+  SetHTColor2Mode(IN_COLOR, HT_CMD_COLOR2_NEAR);
+  update_screen();
+  
+  // Run move, check_color, check_rf, and check_timer in parallel
+  Precedes(move, check_color, check_rf, check_timer);
+}
