@@ -1,0 +1,251 @@
+#include "HTSMUX-driver.nxc"
+
+const byte IN_SOUND = S1;
+const byte IN_COLOR = S2;
+const byte IN_SMUX = SMUXPORT; // SMUXPORT defined as S4 in HTSMUX-driver.nxc
+const byte IN_US_LEFT = msensor_S4_1;
+const byte IN_US_RIGHT = msensor_S4_4;
+const byte IN_LIGHT_LEFT = msensor_S4_2;
+const byte IN_LIGHT_RIGHT = msensor_S4_3;
+
+const byte OUT_RIGHT = OUT_A;
+const byte OUT_LEFT = OUT_C;
+
+const int STATE_STARTING = 0;
+const int STATE_ON_BORDER = 1;
+const int STATE_FIND_LINE = 2;
+const int STATE_FOLLOW_LINE = 3;
+const int STATE_FIND_HOME = 4;
+
+const int LEFT = 0;
+const int RIGHT = 1;
+const int STRAIGHT = 2;
+const int FULL_THROTTLE = 3;
+const int HALT = 4;
+
+const int THRESHOLD_SOUND = 80; // out of 100
+const int THRESHOLD_LIGHT = 40;
+
+const int TONE_FREQ = 1000; // Hz
+const int TONE_TIME = 500; // ms
+
+const int SPEED = 50;
+const float COMPENSATION = 1.14;
+const int COLOR_YELLOW = 5;
+
+mutex control;
+int state;
+
+sub move(int direction)
+{
+  switch (direction)
+  {
+    case LEFT:
+      Off(OUT_LEFT);
+      OnFwd(OUT_RIGHT, SPEED);
+      Wait(100);
+      break;
+
+    case RIGHT:
+      Off(OUT_RIGHT);
+      OnFwd(OUT_LEFT, SPEED);
+      Wait(100);
+      break;
+      
+    case STRAIGHT:
+      OnFwd(OUT_LEFT, SPEED);
+      OnFwd(OUT_RIGHT, SPEED);
+      Wait(100);
+      break;
+      
+    case FULL_THROTTLE:
+      OnFwd(OUT_LEFT, 100);
+      OnFwd(OUT_RIGHT, 100);
+      Wait(100);
+      break;
+
+    case HALT:
+      Off(OUT_LEFT);
+      Off(OUT_RIGHT);
+      Wait(100);
+      break;
+  }
+}
+
+task check_light()
+{
+  while (state == STATE_STARTING)
+  {
+    Acquire(control);
+    move(STRAIGHT);
+    
+    if (smuxSensorLegoLightNorm(IN_LIGHT_RIGHT) < THRESHOLD_LIGHT)
+    {
+      state = STATE_ON_BORDER;
+    }
+
+    if (smuxSensorLegoLightNorm(IN_LIGHT_LEFT) < THRESHOLD_LIGHT)
+    {
+      move(LEFT);
+      Wait(500);
+      state = STATE_ON_BORDER;
+    }
+    
+    Release(control);
+  }
+  
+  while (state == STATE_ON_BORDER)
+  {
+    Acquire(control);
+    move(STRAIGHT);
+
+    if (smuxSensorLegoLightNorm(IN_LIGHT_RIGHT) >= THRESHOLD_LIGHT
+        || smuxSensorLegoLightNorm(IN_LIGHT_LEFT) >= THRESHOLD_LIGHT)
+    {
+      state = STATE_FIND_LINE;
+    }
+
+    Release(control);
+  }
+  
+  while (state == STATE_FIND_LINE)
+  {
+    Acquire(control);
+    move(STRAIGHT);
+
+    if (smuxSensorLegoLightNorm(IN_LIGHT_RIGHT) < THRESHOLD_LIGHT)
+    {
+      state = STATE_FOLLOW_LINE;
+    }
+
+    Release(control);
+  }
+  
+  while (state == STATE_FOLLOW_LINE)
+  {
+    Acquire(control);
+
+    while (smuxSensorLegoLightNorm(IN_LIGHT_LEFT) < THRESHOLD_LIGHT)
+    {
+      move(LEFT);
+    }
+
+    while (smuxSensorLegoLightNorm(IN_LIGHT_RIGHT) < THRESHOLD_LIGHT)
+    {
+      move(RIGHT);
+    }
+      
+    Release(control);
+  }
+}
+
+task check_sound()
+{
+
+  while (state != STATE_FIND_HOME) {}
+  
+  while (state == STATE_FIND_HOME)
+  {
+    Acquire(control);
+
+    move(RIGHT);
+
+    while (Sensor(IN_SOUND) > THRESHOLD_SOUND)
+    {
+      move(FULL_THROTTLE);
+    }
+
+    Release(control);
+  }
+}
+
+task check_color()
+{
+  while (state != STATE_FOLLOW_LINE) {}
+
+  while (state == STATE_FOLLOW_LINE)
+  {
+    Acquire(control);
+
+    if (SensorHTColorNum(IN_COLOR) == COLOR_YELLOW)
+    {
+      move(HALT);
+      state = STATE_FIND_HOME;
+      PlayTone(TONE_FREQ, TONE_TIME);
+    }
+
+    Release(control);
+  }
+}
+
+task main()
+{
+/*
+  int color;
+  SetSensorLowspeed(IN_COLOR);
+  SetHTColor2Mode(IN_COLOR, HT_CMD_COLOR2_NEAR);
+  
+  while (true)
+  {
+    color = SensorHTColorNum(IN_COLOR);
+    if (color == COLOR_YELLOW)
+    {
+      PlayTone(1000, 1000);
+      Wait(1000);
+    }
+  }
+*/
+/*
+  SetSensorSound(IN_SOUND);
+  int noise;
+  while(true)
+  {
+    OnFwd(OUT_RIGHT, 100);
+    OnFwd(OUT_LEFT, 100);
+    noise = Sensor(IN_SOUND);
+    if (noise > 90)
+    {
+      PlayTone(1000, 1000);
+      Wait(1000);
+    }
+    ClearScreen();
+    TextOut(0, LCD_LINE2, "READING:");
+    NumOut(0, LCD_LINE3, noise);
+    Wait(1000);
+  }
+*/
+
+/*
+  SetSensorLight(IN_LIGHT_LEFT);
+  while (true)
+  {
+    TextOut(0, LCD_LINE2, "READING:");
+    NumOut(0, LCD_LINE3, Sensor(IN_LIGHT_LEFT));
+  }
+*/
+/*
+  int distance = 0;
+  SetSensor(SMUXPORT, SENSOR_LOWSPEED);
+  if (!HTSMUXscanPorts(SMUXPORT)) {}
+  smuxSetSensorLegoLight(IN_LIGHT_LEFT, true);
+  while (true)
+  {
+    distance = smuxSensorLegoUS(IN_US_RIGHT);
+    TextOut(0, LCD_LINE2, "DISTANCE:", true);
+    NumOut(0, LCD_LINE3, distance);
+    
+    TextOut(0, LCD_LINE4, "LIGHT:");
+    NumOut(0, LCD_LINE5, smuxSensorLegoLightNorm(IN_LIGHT_LEFT));
+    Wait(100);
+  }
+*/
+  SetSensorSound(IN_SOUND);
+  SetSensorLowspeed(IN_COLOR);
+  SetHTColor2Mode(IN_COLOR, HT_CMD_COLOR2_NEAR);
+  SetSensor(IN_SMUX, SENSOR_LOWSPEED);
+  HTSMUXscanPorts(IN_SMUX);
+  smuxSetSensorLegoLight(IN_LIGHT_LEFT, true);
+  smuxSetSensorLegoLight(IN_LIGHT_RIGHT, true);
+  state = STATE_STARTING;
+  Precedes(check_sound, check_color, check_light);
+}
