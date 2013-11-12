@@ -1,0 +1,246 @@
+const byte IN_COLOR = S1;
+const byte IN_COMPASS = S2;
+const byte IN_US = S3;
+const byte OUT_ARM = OUT_B;
+const byte OUT_LEFT = OUT_C;
+const byte OUT_RIGHT = OUT_A;
+
+const int COLOR_BLUE = 2;
+const int COLOR_RED = 9;
+
+const int STATE_HUNT = 0;
+const int STATE_BLUE = 1;
+const int STATE_RED = 2;
+
+const int SPEED = 75;
+const int SPEED_ARM = 25;
+
+const int HALT = 0;
+const int LEFT = 1;
+const int RIGHT = 2;
+const int FORWARD = 3;
+const int REVERSE = 4;
+const int UP = 5;
+const int DOWN = 6;
+const int FULL_THROTTLE = 7;
+
+const int NEAR = 15;
+
+int state;
+mutex control;
+
+sub move(int param)
+{
+  switch (param)
+  {
+    case HALT:
+      Off(OUT_AC);
+      break;
+
+    case LEFT:
+      OnFwd(OUT_RIGHT, SPEED/2);
+      OnRev(OUT_LEFT, SPEED/2);
+      break;
+
+    case RIGHT:
+      OnRev(OUT_RIGHT, SPEED/2);
+      OnFwd(OUT_LEFT, SPEED/2);
+      break;
+
+    case FORWARD:
+      OnFwd(OUT_AC, SPEED);
+      break;
+
+    case REVERSE:
+      OnRev(OUT_AC, SPEED);
+      break;
+
+    case FULL_THROTTLE:
+      OnFwd(OUT_AC, 100);
+      break;
+  }
+}
+
+sub move_arm(int param)
+{
+  switch (param)
+  {
+    case HALT:
+      Off(OUT_ARM);
+      break;
+
+    case UP:
+      OnRev(OUT_ARM, SPEED_ARM);
+      break;
+
+    case DOWN:
+      OnFwd(OUT_ARM, SPEED_ARM);
+      break;
+  }
+}
+
+task check_color()
+{
+  while (true)
+  {
+    while (state == STATE_HUNT)
+    {
+      Acquire(control);
+
+      if (SensorHTColorNum(IN_COLOR) == COLOR_BLUE)
+      {
+        move(HALT);
+        move_arm(UP);
+        Wait(500);
+        move_arm(HALT);
+        state = STATE_BLUE;
+      }
+
+      if (SensorHTColorNum(IN_COLOR) == COLOR_RED)
+      {
+        move(HALT);
+        move_arm(UP);
+        Wait(500);
+        move_arm(HALT);
+        state = STATE_RED;
+      }
+
+      Release(control);
+    }
+  }
+}
+
+task check_compass()
+{
+  while (true)
+  {
+    while (state == STATE_HUNT)
+    {
+      Acquire(control);
+      move(FORWARD);
+
+      while (SensorHTCompass(IN_COMPASS) >= 180 && SensorHTCompass(IN_COMPASS) < 350)
+      {
+        move(RIGHT);
+      }
+
+      while (SensorHTCompass(IN_COMPASS) < 180 && SensorHTCompass(IN_COMPASS) > 10)
+      {
+        move(LEFT);
+      }
+
+      Release(control);
+    }
+
+    while (state == STATE_BLUE)
+    {
+      Acquire(control);
+
+      while (SensorHTCompass(IN_COMPASS) < 360 && SensorHTCompass(IN_COMPASS) > 190)
+      {
+        move(LEFT);
+      }
+
+      while (SensorHTCompass(IN_COMPASS) >= 0 && SensorHTCompass(IN_COMPASS) < 170)
+      {
+        move(RIGHT);
+      }
+
+      move(HALT);
+      move_arm(DOWN);
+      Wait(1000);
+      move_arm(HALT);
+      move(FULL_THROTTLE);
+      Wait(4000);
+      move(HALT);
+      Wait(500);
+      state = STATE_HUNT;
+      Release(control);
+    }
+  }
+}
+
+task check_us()
+{
+  while (true)
+  {
+    while (state == STATE_HUNT)
+    {
+      Acquire(control);
+
+      if (SensorUS(IN_US) <= NEAR)
+      {
+        move(REVERSE);
+        Wait(1000);
+        move(HALT);
+        move_arm(UP);
+        Wait(1000);
+        move_arm(HALT);
+
+        while (SensorHTCompass(IN_COMPASS) > 270)
+        {
+          move(RIGHT);
+        }
+
+        while (SensorHTCompass(IN_COMPASS) < 65)
+        {
+          move(RIGHT);
+        }
+
+        move(FORWARD);
+        Wait(500);
+
+        if (SensorUS(IN_US) <= NEAR)
+        {
+          move(REVERSE);
+          Wait(3000);
+        }
+
+        while (SensorHTCompass(IN_COMPASS) > 10 && SensorHTCompass(IN_COMPASS) < 180)
+        {
+          move(LEFT);
+        }
+
+        move(HALT);
+        move_arm(DOWN);
+        Wait(1000);
+        move_arm(HALT);
+      }
+
+      Release(control);
+    }
+
+    while (state == STATE_RED)
+    {
+      Acquire(control);
+      move(FORWARD);
+
+      if (SensorUS(IN_US) == 255)
+      {
+        move(HALT);
+        move_arm(UP);
+        Wait(1000);
+        move_arm(HALT);
+        move(REVERSE);
+        Wait(2000);
+        move(HALT);
+        move_arm(DOWN);
+        Wait(1000);
+        move_arm(HALT);
+        state = STATE_HUNT;
+      }
+
+      Release(control);
+    }
+  }
+}
+
+task main()
+{
+  SetSensorLowspeed(IN_COMPASS);
+  SetSensorLowspeed(IN_COLOR);
+  SetSensorLowspeed(IN_US);
+  //SetHTColor2Mode(IN_COLOR, HT_CMD_COLOR2_NEAR);
+  state = STATE_HUNT;
+  Precedes(check_color, check_compass, check_us);
+}
