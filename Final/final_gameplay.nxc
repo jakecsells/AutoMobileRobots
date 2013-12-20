@@ -1,0 +1,189 @@
+const byte IN_COMPASS = S1;
+const byte IN_IR = S2;
+const byte IN_TOUCH = S3;
+
+const byte OUT_LEFT = OUT_C;
+const byte OUT_RIGHT = OUT_A;
+const byte OUT_THING = OUT_B;
+
+const int STATE_SEARCH = 0;
+const int STATE_HASBALL = 1;
+
+const int HALT = 0;
+const int LEFT = 1;
+const int RIGHT = 2;
+const int FORWARD = 3;
+const int REVERSE = 4;
+const int FULL_THROTTLE = 5;
+const int SPEED = 100;
+const int OFFSET = 0;
+
+//ir seeker globals
+byte s1, s3, s5, s7, s9;
+byte dir;
+
+//control globals
+int state;
+mutex control;
+int goal;
+
+sub move_smooth(int param)
+{
+  switch (param)
+  {
+    case HALT:
+      Off(OUT_AC);
+      break;
+
+    case LEFT:
+      OnFwd(OUT_RIGHT, SPEED);
+      OnFwd(OUT_LEFT, SPEED/3);
+      OnFwd(OUT_THING, SPEED);
+      break;
+
+    case RIGHT:
+      OnFwd(OUT_RIGHT, SPEED/3);
+      OnFwd(OUT_LEFT, SPEED);
+      OnFwd(OUT_THING, SPEED);
+      break;
+
+    case FORWARD:
+      OnFwd(OUT_RIGHT, SPEED);
+      OnFwd(OUT_LEFT, SPEED);
+      OnFwd(OUT_THING, SPEED);
+      break;
+
+    case REVERSE:
+      OnRev(OUT_AC, SPEED);
+      break;
+
+    case FULL_THROTTLE:
+      OnFwd(OUT_AC, 100);
+      break;
+  }
+}
+
+sub move_sharp(int param)
+{
+  switch (param)
+  {
+    case HALT:
+      Off(OUT_AC);
+      break;
+
+    case LEFT:
+      OnFwd(OUT_RIGHT, SPEED/2);
+      OnRev(OUT_LEFT, SPEED/2);
+      OnFwd(OUT_THING, SPEED);
+      break;
+
+    case RIGHT:
+      OnRev(OUT_RIGHT, SPEED/2);
+      OnFwd(OUT_LEFT, SPEED/2);
+      OnFwd(OUT_THING, SPEED);
+      break;
+
+    case FORWARD:
+      OnFwd(OUT_RIGHT, SPEED);
+      OnFwd(OUT_LEFT, SPEED);
+      OnFwd(OUT_THING, SPEED);
+      break;
+
+    case REVERSE:
+      OnRev(OUT_AC, SPEED);
+      OnFwd(OUT_THING, SPEED);
+      break;
+
+    case FULL_THROTTLE:
+      OnFwd(OUT_AC, 100);
+      break;
+  }
+}
+
+task check_ir() {
+  while(true) {
+    if(state==STATE_SEARCH) {
+      Acquire(control);
+      ReadSensorHTIRSeeker2AC(IN_IR, dir, s1, s3, s5, s7, s9);
+      ClearScreen();
+      NumOut(0,0,dir);
+      //Rotate left
+      if(dir>=0 && dir<5) {
+        move_smooth(LEFT);
+      }
+      
+      //Rotate right
+      if(dir<=9 && dir>5) {
+        move_smooth(RIGHT);
+      }
+      
+      //Go forward
+      if(dir==5) {
+        move_smooth(FORWARD);
+      }
+    Release(control);
+    }
+  }
+}
+
+task check_compass() {
+  while(true) {
+    if(state==STATE_HASBALL) {
+      Acquire(control);
+      int behind;
+      int current = SensorHTCompass(IN_COMPASS);
+      if(current < 0)
+        current += 360;
+
+      behind = goal;
+      behind -= 180;
+      if(behind < 0)
+        behind += 360;
+      
+      //Print screen debug
+      ClearScreen();
+      TextOut(0,0,"Goal:");
+      NumOut(60,0,goal);
+      TextOut(0,10,"Current:");
+      NumOut(60,10,current);
+      
+      if(current > goal - 20 && current < goal + 20) {
+        move_smooth(FORWARD);
+      }
+      else if(current <= behind || current > goal) {
+        move_smooth(LEFT);
+      }
+      else if(current > behind) {
+        move_smooth(RIGHT);
+      }
+      Release(control);
+    }
+  }
+}
+
+task check_touch() {
+  while(true) {
+    if(IN_TOUCH == 1) {
+      state = STATE_HASBALL;
+    }
+    else {
+      state = STATE_SEARCH;
+    }
+  }
+}
+
+
+task main()
+{
+  SetSensorLowspeed(IN_COMPASS);
+  SetSensorLowspeed(IN_IR);
+  SetSensorTouch(IN_TOUCH);
+  state = STATE_SEARCH;
+  //initialize goal
+  goal = SensorHTCompass(IN_COMPASS);
+  goal -= 90;
+  if(goal < 0) {
+    goal += 360;
+  }
+  Precedes(check_compass, check_touch, check_ir);
+}

@@ -1,0 +1,164 @@
+const byte IN_COMPASS = S1;
+const byte IN_IR = S2;
+const byte IN_TOUCH = S3;
+
+const byte OUT_LEFT = OUT_C;
+const byte OUT_RIGHT = OUT_A;
+const byte OUT_THING = OUT_B;
+
+const int STATE_SEARCH = 0;
+const int STATE_HASBALL = 1;
+const int STATE_POSITION = 3;
+
+const int HALT = 0;
+const int LEFT = 1;
+const int RIGHT = 2;
+const int FORWARD = 3;
+const int REVERSE = 4;
+const int FULL_THROTTLE = 5;
+const int SPEED = 100;
+const int OFFSET = 0;
+
+//ir seeker globals
+byte s1, s3, s5, s7, s9;
+byte dir;
+
+//control globals
+int state;
+mutex control;
+int goal;
+bool HALTFLAG = FALSE;
+
+sub move_smooth(int param)
+{
+  switch (param)
+  {
+    case HALT:
+      Off(OUT_AC);
+      break;
+
+    case LEFT:
+      OnFwd(OUT_RIGHT, SPEED);
+      OnFwd(OUT_LEFT, SPEED/3);
+      OnFwd(OUT_THING, SPEED);
+      break;
+
+    case RIGHT:
+      OnFwd(OUT_RIGHT, SPEED/3);
+      OnFwd(OUT_LEFT, SPEED);
+      OnFwd(OUT_THING, SPEED);
+      break;
+
+    case FORWARD:
+      OnFwd(OUT_RIGHT, SPEED);
+      OnFwd(OUT_LEFT, SPEED);
+      OnFwd(OUT_THING, SPEED);
+      break;
+
+    case REVERSE:
+      OnRev(OUT_AC, SPEED);
+      OnFwd(OUT_THING, SPEED);
+      break;
+
+    case FULL_THROTTLE:
+      OnFwd(OUT_AC, 100);
+      break;
+  }
+}
+
+sub move_sharp(int param)
+{
+  switch (param)
+  {
+    case HALT:
+      Off(OUT_AC);
+      break;
+
+    case LEFT:
+      OnFwd(OUT_RIGHT, SPEED/4);
+      OnRev(OUT_LEFT, SPEED/4);
+      OnFwd(OUT_THING, SPEED);
+      break;
+
+    case RIGHT:
+      OnRev(OUT_RIGHT, SPEED/4);
+      OnFwd(OUT_LEFT, SPEED/4);
+      OnFwd(OUT_THING, SPEED);
+      break;
+
+    case FORWARD:
+      OnFwd(OUT_RIGHT, SPEED);
+      OnFwd(OUT_LEFT, SPEED);
+      OnFwd(OUT_THING, SPEED);
+      break;
+
+    case REVERSE:
+      OnRev(OUT_AC, SPEED);
+      OnFwd(OUT_THING, SPEED);
+      break;
+
+    case FULL_THROTTLE:
+      OnFwd(OUT_AC, 100);
+      break;
+  }
+}
+
+task check_ir() {
+  while(true) {
+    Acquire(control);
+    if(state==STATE_SEARCH) {
+      ReadSensorHTIRSeeker2AC(IN_IR, dir, s1, s3, s5, s7, s9);
+      ClearScreen();
+      NumOut(0,0,dir);
+      //Rotate left
+      if(dir>=0 && dir<5) {
+        move_smooth(LEFT);
+      }
+
+      //Rotate right
+      if(dir<=9 && dir>5) {
+        move_smooth(RIGHT);
+      }
+
+      //Go forward
+      if(dir==5) {
+        move_smooth(FULL_THROTTLE);
+      }
+    }
+    if(state==STATE_HASBALL && !HALTFLAG) {
+      move_sharp(FORWARD);
+      Wait(600);
+      move_smooth(HALT);
+      HALTFLAG = TRUE;
+    }
+    if(HALTFLAG) {
+      move_smooth(HALT);
+    }
+    if(state==STATE_POSITION) {
+      move_sharp(LEFT);
+      Wait(700);
+      move_sharp(FORWARD);
+      Wait(500);
+      state = STATE_SEARCH;
+    }
+    Release(control);
+  }
+}
+
+task check_touch() {
+  while(true) {
+    if(SENSOR_3 == 1) {
+      state = STATE_HASBALL;
+    }
+  }
+}
+
+
+task main()
+{
+  SetSensorLowspeed(IN_COMPASS);
+  SetSensorLowspeed(IN_IR);
+  SetSensorTouch(IN_TOUCH);
+  state = STATE_POSITION;
+  Precedes(check_touch, check_ir);
+}
